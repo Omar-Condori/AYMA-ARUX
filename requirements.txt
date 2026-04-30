@@ -1,0 +1,12 @@
+transformers>=4.40.0
+peft>=0.10.0
+datasets>=2.19.0
+evaluate>=0.4.0
+torch>=2.2.0
+torchaudio>=2.2.0
+librosa>=0.10.0
+soundfile>=0.12.0
+jiwer>=3.0.0
+sacrebleu>=2.4.0
+numpy>=1.26.0
+pandas>=2.2.0

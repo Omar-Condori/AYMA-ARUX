@@ -1,0 +1,10 @@
+venv/
+*.wav
+*.pt
+*.bin
+.env
+__pycache__/
+*.pyc
+.DS_Store
+03_asr/checkpoints/
+03_asr/modelo_lora_aimara/
