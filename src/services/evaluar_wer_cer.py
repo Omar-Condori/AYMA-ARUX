@@ -11,7 +11,7 @@ def evaluar_modelo(model, processor, muestras):
     for muestra in muestras:
         audio, _ = librosa.load(muestra["audio"], sr=16000)
         inputs   = processor(audio, sampling_rate=16000, return_tensors="pt")
-        ids      = model.generate(**inputs, language="ay")
+        ids      = model.generate(**inputs)
         pred     = processor.batch_decode(ids, skip_special_tokens=True)[0]
         referencias.append(muestra["texto"])
         predicciones.append(pred)

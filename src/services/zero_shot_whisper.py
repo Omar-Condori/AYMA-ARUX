@@ -9,7 +9,7 @@ def transcribir(ruta_audio):
     audio, _ = librosa.load(ruta_audio, sr=16000)
     inputs = processor(audio, sampling_rate=16000, return_tensors="pt")
     with torch.no_grad():
-        ids = model.generate(**inputs, language="ay", task="transcribe")
+        ids = model.generate(**inputs)
     return processor.batch_decode(ids, skip_special_tokens=True)[0]
 
 # Prueba rápida
