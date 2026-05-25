@@ -7,8 +7,8 @@ import librosa, torch, soundfile as sf
 
 def voz_a_voz(ruta_audio_entrada, ruta_audio_salida, direccion="aym-spa"):
     # 1. ASR — voz a texto
-    proc_asr  = WhisperProcessor.from_pretrained("openai/whisper-large-v3")
-    model_asr = WhisperForConditionalGeneration.from_pretrained("openai/whisper-large-v3")
+    proc_asr  = WhisperProcessor.from_pretrained("openai/whisper-small")
+    model_asr = WhisperForConditionalGeneration.from_pretrained("openai/whisper-small")
     model_asr = PeftModel.from_pretrained(model_asr, "modelos/asr/final")
 
     audio, _ = librosa.load(ruta_audio_entrada, sr=16000)

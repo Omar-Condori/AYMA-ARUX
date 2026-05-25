@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-import librosa
 from datasets import Dataset, Audio, DatasetDict
 
 RUTA_CSV = "datos/processed/metadata_clean.csv"
@@ -18,9 +17,8 @@ for _, row in df.iterrows():
     if not os.path.exists(ruta):
         print(f"⚠ Audio no encontrado: {ruta}")
         continue
-    audio, sr = librosa.load(ruta, sr=16000)
     datos.append({
-        "audio": {"path": ruta, "array": audio, "sampling_rate": 16000},
+        "audio": ruta,
         "text": row["texto_aimara"],
         "texto_espanol": row["texto_español"],
         "ID_hablante": row["ID_hablante"],

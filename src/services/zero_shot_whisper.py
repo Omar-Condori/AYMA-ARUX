@@ -1,7 +1,7 @@
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 import torch, librosa
 
-MODEL = "openai/whisper-large-v3"
+MODEL = "openai/whisper-small"
 processor = WhisperProcessor.from_pretrained(MODEL)
 model     = WhisperForConditionalGeneration.from_pretrained(MODEL)
 

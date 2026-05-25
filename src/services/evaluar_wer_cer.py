@@ -25,10 +25,10 @@ with open("01_corpus/test_samples.json") as f:
     muestras = json.load(f)
 
 # Evaluar ANTES de LoRA (zero-shot)
-processor = WhisperProcessor.from_pretrained("openai/whisper-large-v3")
-modelo_base = WhisperForConditionalGeneration.from_pretrained("openai/whisper-large-v3")
+processor = WhisperProcessor.from_pretrained("openai/whisper-small")
+modelo_base = WhisperForConditionalGeneration.from_pretrained("openai/whisper-small")
 print("ZERO-SHOT:", evaluar_modelo(modelo_base, processor, muestras))
 
 # Evaluar DESPUÉS de LoRA
-modelo_lora = PeftModel.from_pretrained(modelo_base, "03_asr/modelo_lora_aimara")
+modelo_lora = PeftModel.from_pretrained(modelo_base, "modelos/asr/final")
 print("POST-LORA:", evaluar_modelo(modelo_lora, processor, muestras))
