@@ -3,6 +3,7 @@ import pandas as pd
 import librosa
 import soundfile as sf
 import numpy as np
+import noisereduce as nr
 
 RUTA_CSV = "datos/datos_corpus.csv"
 RUTA_AUDIOS_RAW = "datos/raw/audio"
@@ -22,6 +23,7 @@ def limpiar_texto(texto):
 def procesar_audio(ruta_entrada, ruta_salida):
     try:
         audio, sr = librosa.load(ruta_entrada, sr=None, mono=True)
+        audio = nr.reduce_noise(y=audio, sr=sr, prop_decrease=0.8)
         audio_16k = librosa.resample(audio, orig_sr=sr, target_sr=16000)
         max_val = np.max(np.abs(audio_16k))
         if max_val > 0:

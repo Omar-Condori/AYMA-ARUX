@@ -10,3 +10,4 @@ jiwer>=3.0.0
 sacrebleu>=2.4.0
 numpy>=1.26.0
 pandas>=2.2.0
+noisereduce>=3.0.0
