@@ -3,7 +3,8 @@ from transformers import (WhisperProcessor, WhisperForConditionalGeneration,
                            NllbTokenizer, AutoModelForSeq2SeqLM,
                            VitsModel, VitsTokenizer)
 from peft import PeftModel
-import librosa, torch, soundfile as sf
+import os, librosa, torch, soundfile as sf
+import numpy as np
 
 def voz_a_voz(ruta_audio_entrada, ruta_audio_salida, direccion="aym-spa"):
     # 1. ASR — voz a texto
@@ -31,9 +32,10 @@ def voz_a_voz(ruta_audio_entrada, ruta_audio_salida, direccion="aym-spa"):
     tok_tts  = VitsTokenizer.from_pretrained("facebook/mms-tts-spa")
     mod_tts  = VitsModel.from_pretrained("facebook/mms-tts-spa")
     inputs_tts = tok_tts(texto_trad, return_tensors="pt")
+    os.makedirs(os.path.dirname(ruta_audio_salida), exist_ok=True)
     with torch.no_grad():
         audio_out = mod_tts(**inputs_tts).waveform.squeeze().numpy()
-    sf.write(ruta_audio_salida, audio_out, 16000)
+    sf.write(ruta_audio_salida, audio_out.astype(np.float32), 16000)
     print(f"TTS → guardado en {ruta_audio_salida}")
 
 if __name__ == "__main__":
