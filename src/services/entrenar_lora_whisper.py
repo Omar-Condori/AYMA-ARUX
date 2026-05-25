@@ -17,10 +17,10 @@ lora_config = LoraConfig(
 model = get_peft_model(model, lora_config)
 model.print_trainable_parameters()  # Verifica que sea < 1%
 
-dataset = load_from_disk("01_corpus/dataset_hf")
+dataset = load_from_disk("datos/dataset")
 
 args = Seq2SeqTrainingArguments(
-    output_dir="03_asr/checkpoints",
+    output_dir="modelos/asr/checkpoints",
     per_device_train_batch_size=4,
     num_train_epochs=10,
     learning_rate=1e-4,
@@ -37,4 +37,4 @@ trainer = Seq2SeqTrainer(
     eval_dataset=dataset["validation"],
 )
 trainer.train()
-model.save_pretrained("03_asr/modelo_lora_aimara")
+model.save_pretrained("modelos/asr/final")

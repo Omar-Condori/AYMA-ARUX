@@ -13,4 +13,4 @@ def transcribir(ruta_audio):
     return processor.batch_decode(ids, skip_special_tokens=True)[0]
 
 # Prueba rápida
-print(transcribir("01_corpus/audio_limpio/SPK001/SPK001_A_001.wav"))
+print(transcribir("datos/raw/audio/SPK00001_00001.wav"))

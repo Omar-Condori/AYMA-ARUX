@@ -13,19 +13,16 @@
 
 | Carpeta                       | Qué debe contener                                                        |
 |------------------------------ |--------------------------------------------------------------------------|
-| `01_corpus/audio_crudo/`      | Los WAV tal como salen de la grabadora — sin tocar                       |
-| `01_corpus/audio_limpio/`     | Los WAV ya procesados a 16kHz mono — después de correr `limpiar_audio.py`|
-| `01_corpus/anotaciones_elan/` | Los archivos `.eaf` que exportas desde el programa ELAN                  |
-| `01_corpus/transcripciones/`  | Archivos `.csv` con el texto aimara y español de cada audio              |
-| `01_corpus/dataset_hf/`       | El dataset listo para entrenar — lo genera `crear_dataset_hf.py`         |
-| `03_asr/checkpoints/`         | Se llena sola cuando entrenas LoRA — guarda el progreso                  |
-| `03_asr/modelo_lora_aimara/`  | El modelo final ya entrenado — lo genera `entrenar_lora_whisper.py`      |
-| `03_asr/resultados/`          | Archivos `.json` o `.csv` con los números WER y CER                      |
-| `04_mt/resultados/`           | Archivos con los números BLEU y chrF                                     |
-| `05_tts/audio_sintetizado/`   | Los audios WAV que genera el sistema TTS                                 |
-| `05_tts/resultados/`          | Archivos con los números MCD, PESQ, DNSMOS                               |
-| `06_pipeline/resultados/`     | Resultados finales de todo el sistema completo                           |
-| `notebooks/`                  | Los archivos `.ipynb` que usas en Google Colab                           |
+| `datos/raw/audio/`            | Los WAV originales (SPK00001_00001.wav ...)                              |
+| `datos/datos_corpus.csv`      | Transcripciones aimara + español de cada audio                           |
+| `datos/dataset/`              | Dataset HuggingFace listo para entrenar — lo genera `crear_dataset_hf.py`|
+| `modelos/asr/checkpoints/`    | Checkpoints durante entrenamiento LoRA                                   |
+| `modelos/asr/final/`          | Modelo LoRA entrenado — lo genera `entrenar_lora_whisper.py`             |
+| `src/utils/`                  | Utilidades: limpiar audio, generar metadata, crear dataset               |
+| `src/services/`               | Servicios: ASR, MT, TTS, evaluaciones                                    |
+| `src/pipeline/`               | Pipeline completo ASR → MT → TTS                                         |
+| `notebooks/`                  | Notebook de Google Colab para entrenar                                   |
+| `resultados/`                 | Salidas del pipeline, evaluaciones                                       |
 
 
 
