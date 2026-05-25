@@ -3,8 +3,8 @@ import pandas as pd
 import librosa
 from datasets import Dataset, Audio, DatasetDict
 
-RUTA_CSV = "datos/datos_corpus.csv"
-RUTA_AUDIOS = "datos/raw/audio"
+RUTA_CSV = "datos/processed/metadata_clean.csv"
+RUTA_AUDIOS = "datos/processed/audio"
 RUTA_SALIDA = "datos/dataset"
 
 os.makedirs(RUTA_SALIDA, exist_ok=True)
