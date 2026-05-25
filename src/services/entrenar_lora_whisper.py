@@ -24,7 +24,7 @@ class DataCollatorSpeechSeq2SeqWithPadding:
         return batch
 
 MODEL = "openai/whisper-small"
-processor = WhisperProcessor.from_pretrained(MODEL, language="aymara", task="transcribe")
+processor = WhisperProcessor.from_pretrained(MODEL)
 model = WhisperForConditionalGeneration.from_pretrained(MODEL)
 model.config.forced_decoder_ids = None
 model.config.suppress_tokens = []
