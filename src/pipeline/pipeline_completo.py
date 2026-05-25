@@ -13,7 +13,8 @@ def voz_a_voz(ruta_audio_entrada, ruta_audio_salida, direccion="aym-spa"):
 
     audio, _ = librosa.load(ruta_audio_entrada, sr=16000)
     inputs   = proc_asr(audio, sampling_rate=16000, return_tensors="pt")
-    ids      = model_asr.generate(**inputs)
+    model_asr.config.forced_decoder_ids = None
+    ids      = model_asr.generate(**inputs, language="es", task="transcribe")
     texto_asr = proc_asr.batch_decode(ids, skip_special_tokens=True)[0]
     print(f"ASR → {texto_asr}")
 
@@ -22,7 +23,7 @@ def voz_a_voz(ruta_audio_entrada, ruta_audio_salida, direccion="aym-spa"):
     tok_mt  = NllbTokenizer.from_pretrained("facebook/nllb-200-distilled-600M", src_lang=src)
     mod_mt  = AutoModelForSeq2SeqLM.from_pretrained("facebook/nllb-200-distilled-600M")
     inputs_mt  = tok_mt(texto_asr, return_tensors="pt")
-    ids_mt     = mod_mt.generate(**inputs_mt, forced_bos_token_id=tok_mt.lang_code_to_id[tgt])
+    ids_mt     = mod_mt.generate(**inputs_mt, forced_bos_token_id=tok_mt.convert_tokens_to_ids(tgt))
     texto_trad = tok_mt.batch_decode(ids_mt, skip_special_tokens=True)[0]
     print(f"MT  → {texto_trad}")
 
