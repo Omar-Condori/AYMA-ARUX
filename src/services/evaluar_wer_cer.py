@@ -1,34 +1,50 @@
 import evaluate
+import torch
+import librosa
+import numpy as np
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 from peft import PeftModel
-import librosa, json
+from datasets import load_from_disk
 
 wer_metric = evaluate.load("wer")
 cer_metric = evaluate.load("cer")
 
-def evaluar_modelo(model, processor, muestras):
+MODEL = "openai/whisper-small"
+processor = WhisperProcessor.from_pretrained(MODEL)
+
+dataset = load_from_disk("datos/dataset")
+val_set = dataset["validation"]
+
+def evaluar(model, processor, val_set):
     referencias, predicciones = [], []
-    for muestra in muestras:
-        audio, _ = librosa.load(muestra["audio"], sr=16000)
-        inputs   = processor(audio, sampling_rate=16000, return_tensors="pt")
-        ids      = model.generate(**inputs)
-        pred     = processor.batch_decode(ids, skip_special_tokens=True)[0]
-        referencias.append(muestra["texto"])
+    for i, muestra in enumerate(val_set):
+        audio = muestra["audio"]["array"]
+        inputs = processor(audio, sampling_rate=16000, return_tensors="pt")
+        with torch.no_grad():
+            ids = model.generate(**inputs, language="es", task="transcribe")
+        pred = processor.batch_decode(ids, skip_special_tokens=True)[0]
+        ref = muestra["text"]
+        referencias.append(ref)
         predicciones.append(pred)
+        print(f"  [{i+1}/{len(val_set)}] REF: {ref}")
+        print(f"                  PRED: {pred}")
     return {
         "WER": wer_metric.compute(predictions=predicciones, references=referencias),
         "CER": cer_metric.compute(predictions=predicciones, references=referencias),
     }
 
-# Cargar muestras de prueba
-with open("01_corpus/test_samples.json") as f:
-    muestras = json.load(f)
+print("Evaluando modelo BASE (sin LoRA)...")
+modelo_base = WhisperForConditionalGeneration.from_pretrained(MODEL)
+result_base = evaluar(modelo_base, processor, val_set)
+print(f"\nBASE → WER: {result_base['WER']*100:.2f}% | CER: {result_base['CER']*100:.2f}%\n")
 
-# Evaluar ANTES de LoRA (zero-shot)
-processor = WhisperProcessor.from_pretrained("openai/whisper-small")
-modelo_base = WhisperForConditionalGeneration.from_pretrained("openai/whisper-small")
-print("ZERO-SHOT:", evaluar_modelo(modelo_base, processor, muestras))
+print("Evaluando modelo con LoRA (fine-tuned)...")
+modelo_lora = WhisperForConditionalGeneration.from_pretrained(MODEL)
+modelo_lora = PeftModel.from_pretrained(modelo_lora, "modelos/asr/final")
+result_lora = evaluar(modelo_lora, processor, val_set)
+print(f"\nLoRA  → WER: {result_lora['WER']*100:.2f}% | CER: {result_lora['CER']*100:.2f}%")
 
-# Evaluar DESPUÉS de LoRA
-modelo_lora = PeftModel.from_pretrained(modelo_base, "modelos/asr/final")
-print("POST-LORA:", evaluar_modelo(modelo_lora, processor, muestras))
+print("\n=== RESUMEN ===")
+print(f"Modelo base:  WER {result_base['WER']*100:.2f}% | CER {result_base['CER']*100:.2f}%")
+print(f"Modelo LoRA:  WER {result_lora['WER']*100:.2f}% | CER {result_lora['CER']*100:.2f}%")
+print(f"Mejora WER:   {(result_base['WER'] - result_lora['WER']) * 100:.2f}%")
