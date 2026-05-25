@@ -1,4 +1,4 @@
-import os, re, unicodedata
+import os, re, unicodedata, sys
 import pandas as pd
 import librosa
 import soundfile as sf
@@ -58,7 +58,16 @@ for _, row in df.iterrows():
         print(f"  Audio no encontrado: {archivo}")
 
 df_limpio = pd.DataFrame(resultados)
-print(f"\nTotal archivos procesados: {len(df_limpio)}")
+print(f"\nTotal archivos procesados: {len(df_limpio)}/{len(df)}")
+
+if len(df_limpio) == 0:
+    print("ERROR: Ningún audio fue procesado. Revisa los nombres de archivo en el CSV.")
+    print("Los audios disponibles son:")
+    for f in sorted(os.listdir(RUTA_AUDIOS_RAW))[:5]:
+        print(f"  {f}")
+    print("  ...")
+    sys.exit(1)
+
 print(f"Duración total: {df_limpio['duracion_seg'].sum():.2f}s")
 
 df_limpio.to_csv(RUTA_CSV_LIMPIO, index=False, encoding="utf-8")
