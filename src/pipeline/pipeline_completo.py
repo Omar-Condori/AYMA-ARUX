@@ -27,9 +27,9 @@ def voz_a_voz(ruta_audio_entrada, ruta_audio_salida, direccion="aym-spa"):
     texto_trad = tok_mt.batch_decode(ids_mt, skip_special_tokens=True)[0]
     print(f"MT  → {texto_trad}")
 
-    # 3. TTS — texto a voz
-    tok_tts  = VitsTokenizer.from_pretrained("facebook/mms-tts-aym")
-    mod_tts  = VitsModel.from_pretrained("facebook/mms-tts-aym")
+    # 3. TTS — texto a voz (en español, porque el texto ya está traducido)
+    tok_tts  = VitsTokenizer.from_pretrained("facebook/mms-tts-spa")
+    mod_tts  = VitsModel.from_pretrained("facebook/mms-tts-spa")
     inputs_tts = tok_tts(texto_trad, return_tensors="pt")
     with torch.no_grad():
         audio_out = mod_tts(**inputs_tts).waveform.squeeze().numpy()
