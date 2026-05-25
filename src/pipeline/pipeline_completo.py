@@ -35,5 +35,5 @@ def voz_a_voz(ruta_audio_entrada, ruta_audio_salida, direccion="aym-spa"):
     sf.write(ruta_audio_salida, audio_out, 16000)
     print(f"TTS → guardado en {ruta_audio_salida}")
 
-# Ejemplo de uso
-voz_a_voz("entrada_aimara.wav", "salida_espanol.wav", direccion="aym-spa")
+if __name__ == "__main__":
+    voz_a_voz("datos/processed/audio/SPK00001_00001.wav", "resultados/pipeline/resultado.wav", direccion="aym-spa")
