@@ -75,7 +75,6 @@ trainer = Seq2SeqTrainer(
     train_dataset=dataset["train"],
     eval_dataset=dataset["validation"],
     data_collator=data_collator,
-    tokenizer=processor.feature_extractor,
 )
 trainer.train()
 model.save_pretrained("modelos/asr/final")
